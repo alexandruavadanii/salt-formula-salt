@@ -44,6 +44,12 @@ salt_control_virt_{{ cluster_name }}_{{ node_name }}:
       seed: True
       serial_type: pty
       console: True
+      {%- if node.config is defined %}
+      config:
+      {%- for config_key, config_value in node.config.iteritems() %}
+        {{ config_key }}: {{ config_value }}
+      {%- endfor %}
+      {%- endif %}
   - unless: virsh list --all --name| grep -E "^{{ node_name }}.{{ cluster.domain }}$"
 
 #salt_control_seed_{{ cluster_name }}_{{ node_name }}:
